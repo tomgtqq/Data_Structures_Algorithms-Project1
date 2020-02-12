@@ -1,0 +1,5 @@
+Task0  Worst Case Big-O  O(1)
+Task1  Worst Case Big-O  O(n^2)
+Task2  Worst Case Big-O  O(n)
+Task3  Worst Case Big-O  Part A: O(nlogn)  Part B: O(n^2)
+Task4  Worst Case Big-O  O(n^3)
