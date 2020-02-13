@@ -32,18 +32,5 @@ def countDiffTelNumber(records):
             count += 1
     return count
 
-
-def testCountDiffTelNumber():
-
-    records = [['97424 22395', '92435 91418', '01-09-2016 06:03:22'],
-               ['92435 72078', '92435 91418', '01-09-2016 06:05:35'],
-               ['94489 72078', '92435 91418', '01-09-2016 06:05:35']]
-
-    assert(countDiffTelNumber(records) == 4)
-    print("function is working correctly!")
-
-
-testCountDiffTelNumber()
-
 print("There are {} different telephone numbers in the records.".format(
     countDiffTelNumber(texts) + countDiffTelNumber(calls)))

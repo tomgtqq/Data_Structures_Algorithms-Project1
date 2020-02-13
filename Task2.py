@@ -19,30 +19,41 @@ Print a message:
 "<telephone number> spent the longest time, <total time> seconds, on the phone during
 September 2016.".
 """
+tel_numbers = set()
+tel_number_total_time = dict()
 
 
-def findLongestCallDuration(records):
-    total_time = 0
-    tel_number = ""
+def createTelNumbersSet(records):
     for item in records:
-        if int(item[3]) > total_time:
-            total_time = int(item[3])
-            tel_number = item[0]
-    return tel_number, total_time
+        tel_numbers.add(item[0])
+        tel_numbers.add(item[1])
 
 
-def testFindLongestCallDuration():
-
-    records = [['78130 00821', '98453 94494', '01-09-2016 06:01:12', '186'],
-               ['78298 91466', '(022)28952819', '01-09-2016 06:01:59', '2093'],
-               ['97424 22395', '(022)47410783', '01-09-2016 06:03:51', '1975']]
-
-    assert(findLongestCallDuration(records) == ('78298 91466', 2093))
-    print("function is working correctly!")
+def createTelNumTotalTimeDict(num_list, records):
+    for num in num_list:
+        total_time = calculateSpentTime(num, records)
+        tel_number_total_time[num] = total_time
 
 
-testFindLongestCallDuration()
+def calculateSpentTime(num, records):
+    spent_time = 0
+    for item in records:
+        if item[0] == num:
+            spent_time += int(item[3])
+        if item[1] == num:
+            spent_time += int(item[3])
+
+    return spent_time
 
 
-print("%s spent the longest time, %s seconds, on the phone during September 2016." %
-      findLongestCallDuration(calls))
+createTelNumbersSet(calls)
+
+createTelNumTotalTimeDict(tel_numbers, calls)
+
+telephone_number = sorted(tel_number_total_time, key=(
+    lambda key: tel_number_total_time[key]), reverse=True)[0]
+
+total_time = tel_number_total_time[str(telephone_number)]
+
+print("{} spent the longest time, {} seconds, on the phone during September 2016.".format(
+    telephone_number, total_time))

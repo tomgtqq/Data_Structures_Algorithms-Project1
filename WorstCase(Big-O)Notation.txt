@@ -1,5 +1,177 @@
-Task0  Worst Case Big-O  O(1)
-Task1  Worst Case Big-O  O(n^2)
-Task2  Worst Case Big-O  O(n)
-Task3  Worst Case Big-O  Part A: O(nlogn)  Part B: O(n^2)
-Task4  Worst Case Big-O  O(n^3)
+Calculate Big O  (Worst Case)
+
+
+1. Task0  O(1)
+
+The Task0 is about "What is the first record of texts and what is the last record of calls?". So it's get item from fixed postion in List. 
+
+My solution " texts[0][0]  calls[-1][0] "  get item from List. I think it's constant Big-O O(1).
+
+
+2. Task1   O(n^2)
+
+The Task1 is about "How many different telephone numbers are there in the records?"
+
+My solution :
+
+def countDiffTelNumber(records):
+    count = 0
+    for item in records:                       <-- It's Linear , So I think it's O(n)
+        if item[0] not in tel_number_ist:      <-- It's "x in S" Operaiton, So I think it's also O(n)
+            tel_number_ist.append(item[0])
+            count += 1
+        if item[1] not in tel_number_ist:      <-- It's "x in S" Operaiton too, So I think it's O(n)
+            tel_number_ist.append(item[1])
+            count += 1
+    return count
+
+So I think The total Big-O  is  O(n^2)
+
+
+3. Task2   O(n^2)
+
+The Task2 is about "Which telephone number spent the longest time on the phone during the period?"
+
+My solution :
+
+tel_numbers = set()
+tel_number_total_time = dict()
+
+
+def createTelNumbersSet(records):
+    for item in records:             <-- I think it's O(n)
+        tel_numbers.add(item[0])     <-- I think it's O(1)
+        tel_numbers.add(item[1])	 <-- I think it's O(1)
+
+
+def createTelNumTotalTimeDict(num_list, records):
+    for num in num_list:                          <-- I think it's O(n)
+        total_time = calculateSpentTime(num, records)    <-- calculateSpentTime is O(n)
+        tel_number_total_time[num] = total_time
+
+
+def calculateSpentTime(num, records):
+    spent_time = 0
+    for item in records:          <-- It is O(n)
+        if item[0] == num:
+            spent_time += int(item[3])
+        if item[1] == num:
+            spent_time += int(item[3])
+
+    return spent_time
+
+
+createTelNumbersSet(calls)       <-- createTelNumbersSet is O(n)
+
+createTelNumTotalTimeDict(tel_numbers, calls)      <-- createTelNumTotalTimeDict is O(n^2)
+
+telephone_number = sorted(tel_number_total_time, key=(               <-- I think "sorted methon" is O(nlogn)
+    lambda key: tel_number_total_time[key]), reverse=True)[0]
+
+total_time = tel_number_total_time[str(telephone_number)]
+
+print("{} spent the longest time, {} seconds, on the phone during September 2016.".format(
+    telephone_number, total_time))
+
+
+So I think The total Big-O  O(n) + O(n^2) + O(nlogn) =  O(n^2)
+
+
+4. Task3    Part A is O(n) , Part B is O(n)
+
+Part A: Find all of the area codes and mobile prefixes called by people
+in Bangalore
+
+My solution :
+
+
+area_codes = []
+
+
+def extractPrefixesCodes(record):
+    if record[:3] == '140':     <-- I think it is constant Big-O O(1)
+        return '140'
+    elif record[:1] in ['7', '8', '9']:    <-- I think it is constant Big-O O(1)
+        return record.split(' ')[0][:4]    <-- I think split methon is constant Big-O O(1)
+    elif record.index(')'):
+        return record[:record.index(')') + 1]
+
+
+for item in calls:                        <-- I think it is Big-O O(n)
+    if extractPrefixesCodes(item[0]) == '(080)':           <-- extractPrefixesCodes's Big-O is O(1)
+        area_codes.append(extractPrefixesCodes(item[1]))   <-- I think The append method is constant Big-O O(1)
+
+print("The numbers called by people in Bangalore have codes:",
+      *sorted(set(area_codes)), sep='\n')
+
+So I think  Part A's  total Big-O  O(n) + O(1) + O(1) =  O(n)
+
+
+
+Part B: What percentage of calls from fixed lines in Bangalore are made
+to fixed lines also in Bangalore?
+
+
+
+calling_by_Bangalore = []
+
+
+def extractCallsByBangalore(records):       
+    calls_list = []
+    for item in records:                     <-- I think it is Big-O O(n)
+        if extractPrefixesCodes(item[0]) == '(080)':   <-- extractPrefixesCodes's Big-O is O(1)
+            calls_list.append(item)           <-- I think append method is Big-O O(1)
+    return calls_list
+
+
+calling_by_Bangalore = extractCallsByBangalore(calls)   <--  extractCallsByBangalore's Big-O is O(n)
+count = 0
+
+for item in calling_by_Bangalore:                 <-- I think it is Big-O O(n)
+    if extractPrefixesCodes(item[1]) == '(080)':
+        count += 1
+
+print("{:.2%} percent of calls from fixed lines in Bangalore are calls to other fixed lines in Bangalore.".format(
+    count / len(calling_by_Bangalore)))
+
+
+So I think  Part B's  total Big-O  O(n) + O(n) =  O(n)
+
+
+
+Task4  Worst Case Big-O   O(n^3)
+
+TASK 4:
+The telephone company want to identify numbers that might be doing
+telephone marketing. Create a set of possible telemarketers:
+these are numbers that make outgoing calls but never send texts,
+receive texts or receive incoming calls.
+
+
+
+def isReceiveIncomingCalls(outgoingCall, records):
+    for item in records:                                    <-- I think it is Big-O O(n)
+        incomingCall = item[1]
+        if outgoingCall == incomingCall:
+            return True
+    return False
+
+
+def isSendOrReceiveTexts(outgoingCall, records):
+    for item in records:                                     <-- I think it is Big-O O(n)
+        if outgoingCall == item[0] or outgoingCall == item[1]:
+            return True
+    return False
+
+
+telemarketers = []
+
+for item in calls:                                       <-- I think it is Big-O O(n)
+    if not isReceiveIncomingCalls(item[0], calls):         <-- "isReceiveIncomingCalls" is Big-O O(n)
+        if not isSendOrReceiveTexts(item[0], texts):        <-- "isSendOrReceiveTexts" is Big-O O(n)
+            telemarketers.append(item[0])				      <-- "append method" is Big-O O(1)
+
+print("These numbers could be telemarketers: ",
+      *sorted(set(telemarketers)), sep='\n')                  <-- "sorted method" is Big-O O(n log n) 
+
+So I think Task4 total Big-O  O(n)*O(n)*O(n) + O(n log n) =  O(n^3)
